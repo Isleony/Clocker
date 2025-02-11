@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relógio e Cronômetro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .time {
+            font-size: 2em;
+            margin: 20px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Relógio Digital</h1>
+        <div id="clock" class="time"></div>
+        
+        <h1>Cronômetro</h1>
+        <div id="stopwatch" class="time">00:00:00</div>
+        <button onclick="startStopwatch()">Iniciar</button>
+        <button onclick="pauseStopwatch()">Pausar</button>
+        <button onclick="resetStopwatch()">Resetar</button>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            document.getElementById("clock").textContent = timeString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        let stopwatchInterval;
+        let elapsedTime = 0;
+        let running = false;
+
+        function startStopwatch() {
+            if (!running) {
+                running = true;
+                const startTime = Date.now() - elapsedTime;
+                stopwatchInterval = setInterval(() => {
+                    elapsedTime = Date.now() - startTime;
+                    const totalSeconds = Math.floor(elapsedTime / 1000);
+                    const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+                    const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+                    const seconds = String(totalSeconds % 60).padStart(2, '0');
+                    document.getElementById("stopwatch").textContent = `${hours}:${minutes}:${seconds}`;
+                }, 1000);
+            }
+        }
+
+        function pauseStopwatch() {
+            clearInterval(stopwatchInterval);
+            running = false;
+        }
+
+        function resetStopwatch() {
+            clearInterval(stopwatchInterval);
+            running = false;
+            elapsedTime = 0;
+            document.getElementById("stopwatch").textContent = "00:00:00";
+        }
+    </script>
+</body>
+</html>
